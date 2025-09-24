@@ -1,0 +1,1875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS6620 Cloud Computing Project Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1e3c72;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .platform-badges {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .aws-badge {
+            background: #FF9900;
+            color: white;
+        }
+
+        .oss-badge {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+            background: #f5f5f5;
+            padding: 25px;
+            border-radius: 12px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 600;
+            color: #1e3c72;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        select {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 15px;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        select:hover, select:focus {
+            border-color: #2a5298;
+            outline: none;
+        }
+
+        .generate-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(30, 60, 114, 0.3);
+        }
+
+        .project-card {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 35px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .project-header {
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+
+        .project-title {
+            font-size: 1.5rem;
+            color: #1e3c72;
+            margin-bottom: 10px;
+        }
+
+        .project-description {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .complexity-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .intermediate {
+            background: #FFF3E0;
+            color: #E65100;
+        }
+
+        .advanced {
+            background: #FFEBEE;
+            color: #C62828;
+        }
+
+        .section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-weight: 600;
+            color: #1e3c72;
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title::before {
+            content: "▶";
+            margin-right: 8px;
+            font-size: 0.8rem;
+        }
+
+        .architecture-box {
+            background: #f8f8f8;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+            line-height: 1.5;
+            overflow-x: auto;
+        }
+
+        .tech-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .tech-column {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .tech-column h4 {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .aws-column h4 {
+            color: #FF9900;
+        }
+
+        .oss-column h4 {
+            color: #4CAF50;
+        }
+
+        .tech-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tech-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tech-list li:last-child {
+            border-bottom: none;
+        }
+
+        .cost-indicator {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .dataset-info {
+            background: #E6F7FF;
+            border: 1px solid #1890FF;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .dataset-link {
+            color: #1890FF;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .dataset-link:hover {
+            text-decoration: underline;
+        }
+
+        .implementation-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 8px 8px 0 0;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            background: #f5f5f5;
+            border-bottom: 2px solid #1e3c72;
+            margin-bottom: -2px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .implementation-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .implementation-list li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        .implementation-list li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .code-snippet {
+            background: #2D2D2D;
+            color: #F8F8F2;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+        }
+
+        .deliverables-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .deliverable-item {
+            background: #F5F5F5;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 3px solid #1e3c72;
+        }
+
+        .time-estimate {
+            background: #F0F0F0;
+            border-radius: 6px;
+            padding: 10px;
+            margin-top: 15px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .challenges {
+            background: #FFF7E6;
+            border: 1px solid #FFD591;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .challenges-title {
+            font-weight: 600;
+            color: #D46B08;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cloud Computing Project Generator</h1>
+        <p class="subtitle">CS6620 - Fall 2025 | AWS & Open Source Solutions</p>
+        
+        <div class="platform-badges">
+            <span class="badge aws-badge">AWS Cloud</span>
+            <span class="badge oss-badge">Open Source</span>
+        </div>
+
+        <div class="filters">
+            <div class="filter-group">
+                <label for="projectFocus">Project Focus Area</label>
+                <select id="projectFocus">
+                    <option value="containers">Containers & Orchestration</option>
+                    <option value="cicd">CI/CD & DevOps</option>
+                    <option value="data">Data Engineering & Analytics</option>
+                    <option value="monitoring">Monitoring & Observability</option>
+                    <option value="security">Security & Compliance</option>
+                    <option value="ml">Machine Learning & AI</option>
+                    <option value="serverless">Serverless Architecture</option>
+                    <option value="iac">Infrastructure as Code</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="complexity">Complexity Level</label>
+                <select id="complexity">
+                    <option value="intermediate">Intermediate (3-4 hours)</option>
+                    <option value="advanced">Advanced (6-8 hours)</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="platform">Platform Preference</label>
+                <select id="platform">
+                    <option value="hybrid">Hybrid (AWS + Open Source)</option>
+                    <option value="aws-heavy">AWS-Heavy (70%+ AWS)</option>
+                    <option value="oss-heavy">OSS-Heavy (70%+ Open Source)</option>
+                </select>
+            </div>
+        </div>
+
+        <button class="generate-btn" onclick="generateProject()">Generate Project</button>
+
+        <div id="projectOutput"></div>
+    </div>
+
+    <script>
+        const projects = {
+            containers: {
+                intermediate: [
+                    {
+                        title: "Multi-Cloud Container Registry with Harbor",
+                        description: "Build a private container registry using Harbor (open source) and integrate it with both AWS ECR and local Kubernetes clusters for a hybrid cloud strategy.",
+                        complexity: "intermediate",
+                        architecture: `Developer Workstation
+         ↓
+    Harbor Registry (EC2)
+    ├── PostgreSQL (RDS/Local)
+    ├── Redis (ElastiCache/Local)
+    └── S3/MinIO Backend
+         ↓
+    ┌─────────┴─────────┐
+    │                   │
+AWS ECR Replication   K8s Cluster
+    (Backup)         (Deployment)`,
+                        awsTools: {
+                            "EC2": "Harbor hosting",
+                            "RDS": "PostgreSQL backend",
+                            "S3": "Blob storage",
+                            "Route 53": "DNS management",
+                            "ACM": "SSL certificates"
+                        },
+                        ossTools: {
+                            "Harbor": "Container registry",
+                            "PostgreSQL": "Database",
+                            "Redis": "Cache layer",
+                            "MinIO": "S3-compatible storage",
+                            "Trivy": "Vulnerability scanning"
+                        },
+                        dataset: {
+                            name: "Container Images Collection",
+                            size: "500MB",
+                            description: "Sample microservices containers, vulnerable images for scanning",
+                            link: "https://github.com/GoogleContainerTools/distroless",
+                            format: "Docker images, Dockerfiles"
+                        },
+                        implementationAWS: [
+                            "Launch EC2 instance for Harbor",
+                            "Set up RDS PostgreSQL instance",
+                            "Configure S3 bucket for blob storage",
+                            "Install Harbor using Helm/Docker Compose",
+                            "Configure Harbor with AWS backends",
+                            "Set up replication to ECR",
+                            "Implement vulnerability scanning",
+                            "Create CI/CD integration examples"
+                        ],
+                        implementationOSS: [
+                            "Deploy Harbor on local VM/server",
+                            "Set up PostgreSQL container",
+                            "Deploy MinIO for S3-compatible storage",
+                            "Configure Redis for caching",
+                            "Install Trivy scanner integration",
+                            "Set up Harbor replication policies",
+                            "Create webhook notifications",
+                            "Build Prometheus monitoring"
+                        ],
+                        challenges: "Harbor requires significant resources; consider using t3.medium or larger. Network configuration between Harbor and ECR can be complex.",
+                        deliverables: [
+                            "Working Harbor registry",
+                            "Replication policies documentation",
+                            "Security scanning reports",
+                            "CI/CD integration guide",
+                            "Cost comparison: Harbor vs ECR-only",
+                            "Performance benchmarks"
+                        ],
+                        timeEstimate: "3-4 hours"
+                    },
+                    {
+                        title: "Service Mesh Comparison: Istio vs AWS App Mesh",
+                        description: "Deploy the same microservices application using both Istio (open source) and AWS App Mesh, comparing features, performance, and operational complexity.",
+                        complexity: "intermediate",
+                        architecture: `Microservices App
+    ├── Frontend (React)
+    ├── API Gateway
+    ├── Order Service
+    ├── Payment Service
+    └── Inventory Service
+         ↓
+┌──────────┴──────────┐
+│                     │
+Istio Deployment    App Mesh Deployment
+├── Envoy Proxies   ├── Envoy Proxies
+├── Pilot           ├── AWS Control Plane
+├── Citadel         ├── AWS Cloud Map
+└── Grafana/Kiali   └── CloudWatch/X-Ray`,
+                        awsTools: {
+                            "EKS": "Kubernetes cluster",
+                            "App Mesh": "Service mesh",
+                            "Cloud Map": "Service discovery",
+                            "X-Ray": "Distributed tracing",
+                            "CloudWatch": "Monitoring"
+                        },
+                        ossTools: {
+                            "Istio": "Service mesh",
+                            "Envoy": "Proxy",
+                            "Kiali": "Observability",
+                            "Grafana": "Dashboards",
+                            "Prometheus": "Metrics"
+                        },
+                        dataset: {
+                            name: "Microservices Demo App",
+                            size: "50MB",
+                            description: "Google's Online Boutique microservices demo",
+                            link: "https://github.com/GoogleCloudPlatform/microservices-demo",
+                            format: "Kubernetes manifests, container images"
+                        },
+                        implementationAWS: [
+                            "Create EKS cluster for App Mesh",
+                            "Deploy microservices application",
+                            "Install App Mesh controller",
+                            "Create mesh and virtual services",
+                            "Configure service discovery",
+                            "Set up X-Ray tracing",
+                            "Implement traffic policies",
+                            "Create CloudWatch dashboards"
+                        ],
+                        implementationOSS: [
+                            "Deploy Kubernetes cluster",
+                            "Install Istio using istioctl",
+                            "Deploy microservices with sidecars",
+                            "Configure traffic management",
+                            "Set up mTLS between services",
+                            "Install Kiali for visualization",
+                            "Configure Prometheus/Grafana",
+                            "Implement circuit breaking"
+                        ],
+                        challenges: "Running both deployments requires substantial resources. Consider using spot instances for cost savings.",
+                        deliverables: [
+                            "Comparative analysis report",
+                            "Performance benchmarks",
+                            "Feature comparison matrix",
+                            "Operational complexity assessment",
+                            "Cost analysis",
+                            "Migration guide between platforms"
+                        ],
+                        timeEstimate: "4 hours"
+                    }
+                ],
+                advanced: [
+                    {
+                        title: "GitOps Platform with ArgoCD and AWS Controllers",
+                        description: "Build a complete GitOps platform using ArgoCD for Kubernetes deployments with AWS Controllers for Kubernetes (ACK) to manage AWS resources declaratively.",
+                        complexity: "advanced",
+                        architecture: `Git Repository (GitHub/GitLab)
+         ↓
+    ArgoCD Server
+    ├── Application CRDs
+    ├── Sync Policies
+    └── RBAC Rules
+         ↓
+    EKS Cluster
+    ├── ArgoCD Controllers
+    ├── AWS Controllers (ACK)
+    │   ├── RDS Controller
+    │   ├── S3 Controller
+    │   └── Lambda Controller
+    └── Workload Deployments
+         ↓
+    AWS Resources (Created via ACK)
+    ├── RDS Instances
+    ├── S3 Buckets
+    ├── Lambda Functions
+    └── DynamoDB Tables`,
+                        awsTools: {
+                            "EKS": "Kubernetes cluster",
+                            "ACK": "AWS Controllers for K8s",
+                            "RDS": "Managed databases",
+                            "Lambda": "Serverless functions",
+                            "CodeCommit": "Git repository"
+                        },
+                        ossTools: {
+                            "ArgoCD": "GitOps engine",
+                            "Helm": "Package manager",
+                            "Kustomize": "Configuration management",
+                            "Sealed Secrets": "Secret management",
+                            "OPA": "Policy engine"
+                        },
+                        dataset: {
+                            name: "GitOps Repository Templates",
+                            size: "10MB",
+                            description: "Sample applications, Helm charts, and ACK resource definitions",
+                            link: "https://github.com/argoproj/argocd-example-apps",
+                            format: "YAML manifests, Helm charts"
+                        },
+                        implementationAWS: [
+                            "Create EKS cluster with IRSA",
+                            "Install ACK controllers for RDS, S3, Lambda",
+                            "Configure IAM roles for ACK",
+                            "Deploy ArgoCD on EKS",
+                            "Set up AWS CodeCommit repos",
+                            "Create ACK resource definitions",
+                            "Test AWS resource provisioning",
+                            "Implement cost monitoring"
+                        ],
+                        implementationOSS: [
+                            "Install ArgoCD with HA mode",
+                            "Configure Git webhook integration",
+                            "Set up application projects",
+                            "Implement Sealed Secrets",
+                            "Create sync policies and waves",
+                            "Install OPA for policy enforcement",
+                            "Set up Prometheus monitoring",
+                            "Build custom ArgoCD plugins"
+                        ],
+                        challenges: "ACK controllers require specific IAM permissions. ArgoCD HA mode needs multiple replicas.",
+                        deliverables: [
+                            "Complete GitOps platform",
+                            "ACK resource templates",
+                            "RBAC and policy documentation",
+                            "Disaster recovery procedures",
+                            "Multi-environment strategy",
+                            "Cost optimization guide",
+                            "Security audit report"
+                        ],
+                        timeEstimate: "6-8 hours"
+                    }
+                ]
+            },
+            cicd: {
+                intermediate: [
+                    {
+                        title: "Hybrid CI/CD: Jenkins + AWS CodePipeline",
+                        description: "Create a hybrid CI/CD pipeline using Jenkins for complex build orchestration and AWS CodePipeline for deployment, comparing capabilities and costs.",
+                        complexity: "intermediate",
+                        architecture: `GitHub Repository
+         ↓
+    Jenkins (EC2/Container)
+    ├── Build Stage
+    ├── Test Stage
+    ├── Security Scan
+    └── Artifact Creation
+         ↓
+    S3 (Artifact Store)
+         ↓
+    AWS CodePipeline
+    ├── Source: S3
+    ├── Deploy: CodeDeploy
+    └── Test: Device Farm
+         ↓
+    Target Environments
+    ├── Dev (ECS)
+    ├── Staging (EC2)
+    └── Prod (EKS)`,
+                        awsTools: {
+                            "CodePipeline": "Deployment orchestration",
+                            "CodeDeploy": "Application deployment",
+                            "CodeBuild": "Managed builds",
+                            "S3": "Artifact storage",
+                            "ECR": "Container registry"
+                        },
+                        ossTools: {
+                            "Jenkins": "CI server",
+                            "SonarQube": "Code quality",
+                            "Nexus": "Artifact repository",
+                            "Terraform": "IaC",
+                            "Ansible": "Configuration"
+                        },
+                        dataset: {
+                            name: "Spring PetClinic Application",
+                            size: "25MB",
+                            description: "Java Spring Boot application with tests",
+                            link: "https://github.com/spring-projects/spring-petclinic",
+                            format: "Java source code, Dockerfile"
+                        },
+                        implementationAWS: [
+                            "Set up CodePipeline with stages",
+                            "Configure CodeDeploy applications",
+                            "Create S3 artifact bucket",
+                            "Set up CodeBuild for Docker builds",
+                            "Configure IAM roles",
+                            "Create deployment groups",
+                            "Set up CloudWatch alarms",
+                            "Implement rollback strategies"
+                        ],
+                        implementationOSS: [
+                            "Install Jenkins on EC2/container",
+                            "Configure Jenkins pipelines",
+                            "Set up SonarQube integration",
+                            "Install quality gates",
+                            "Configure Nexus repository",
+                            "Create Jenkinsfile",
+                            "Set up distributed builds",
+                            "Implement Blue Ocean UI"
+                        ],
+                        challenges: "Jenkins requires persistent storage and backup strategy. Integration between Jenkins and CodePipeline needs careful IAM configuration.",
+                        deliverables: [
+                            "Working hybrid pipeline",
+                            "Jenkinsfile and buildspec.yml",
+                            "Cost comparison analysis",
+                            "Performance metrics",
+                            "Security scan reports",
+                            "Deployment strategies guide"
+                        ],
+                        timeEstimate: "4 hours"
+                    }
+                ],
+                advanced: [
+                    {
+                        title: "Multi-Cloud CI/CD with Tekton and AWS Services",
+                        description: "Build a cloud-native CI/CD platform using Tekton (Kubernetes-native) integrated with AWS services for a portable, scalable pipeline solution.",
+                        complexity: "advanced",
+                        architecture: `Event Sources
+    ├── GitHub Webhooks
+    ├── S3 Events
+    └── Schedule Triggers
+         ↓
+    Tekton Event Listener
+         ↓
+    Tekton Pipelines (EKS)
+    ├── Clone Task
+    ├── Build Task (Kaniko)
+    ├── Test Task (Parallel)
+    ├── Scan Task (Trivy/Snyk)
+    └── Deploy Task
+         ↓
+    Multi-Cloud Targets
+    ├── AWS (EKS/Lambda)
+    ├── On-Premise K8s
+    └── Edge Locations`,
+                        awsTools: {
+                            "EKS": "Kubernetes cluster",
+                            "EventBridge": "Event routing",
+                            "Secrets Manager": "Credentials",
+                            "CloudWatch": "Logging/Monitoring",
+                            "Lambda": "Serverless tasks"
+                        },
+                        ossTools: {
+                            "Tekton": "CI/CD engine",
+                            "Kaniko": "Container builder",
+                            "Argo Rollouts": "Progressive delivery",
+                            "Vault": "Secret management",
+                            "Fluentd": "Log aggregation"
+                        },
+                        dataset: {
+                            name: "Multi-Language Monorepo",
+                            size: "100MB",
+                            description: "Monorepo with Go, Python, and Node.js services",
+                            link: "https://github.com/GoogleCloudPlatform/bank-of-anthos",
+                            format: "Multiple languages, Kubernetes manifests"
+                        },
+                        implementationAWS: [
+                            "Create EKS cluster with Fargate",
+                            "Set up EventBridge integrations",
+                            "Configure Secrets Manager",
+                            "Create Lambda functions for tasks",
+                            "Set up CloudWatch Container Insights",
+                            "Configure cross-account roles",
+                            "Implement cost allocation tags",
+                            "Create AWS Service Catalog products"
+                        ],
+                        implementationOSS: [
+                            "Install Tekton Pipelines and Triggers",
+                            "Create reusable task library",
+                            "Set up Tekton Dashboard",
+                            "Configure Kaniko for builds",
+                            "Implement Vault integration",
+                            "Create pipeline templates",
+                            "Set up Argo Rollouts",
+                            "Build custom task containers"
+                        ],
+                        challenges: "Tekton has a learning curve. Managing secrets across clouds requires careful planning.",
+                        deliverables: [
+                            "Multi-cloud CI/CD platform",
+                            "Reusable task library",
+                            "Pipeline templates",
+                            "Security compliance report",
+                            "Performance benchmarks",
+                            "Cost optimization strategies",
+                            "Disaster recovery plan"
+                        ],
+                        timeEstimate: "6-8 hours"
+                    }
+                ]
+            },
+            data: {
+                intermediate: [
+                    {
+                        title: "Real-time Analytics: Kafka vs Kinesis",
+                        description: "Build parallel real-time data processing pipelines using Apache Kafka and AWS Kinesis, comparing performance, cost, and operational complexity.",
+                        complexity: "intermediate",
+                        architecture: `Data Sources
+    ├── IoT Sensors
+    ├── Application Logs
+    └── Clickstream
+         ↓
+┌──────────┴──────────┐
+│                     │
+Kafka Cluster        Kinesis Streams
+├── Zookeeper        ├── Shards
+├── Brokers (3)      ├── Kinesis Analytics
+└── Schema Registry  └── Firehose
+     ↓                    ↓
+Kafka Connect        Lambda Functions
+     ↓                    ↓
+Elasticsearch        S3/Redshift`,
+                        awsTools: {
+                            "Kinesis Data Streams": "Streaming",
+                            "Kinesis Analytics": "Stream processing",
+                            "Firehose": "Data delivery",
+                            "Lambda": "Processing functions",
+                            "Redshift": "Data warehouse"
+                        },
+                        ossTools: {
+                            "Apache Kafka": "Message broker",
+                            "Kafka Connect": "Data integration",
+                            "Apache Flink": "Stream processing",
+                            "Elasticsearch": "Search/Analytics",
+                            "Grafana": "Visualization"
+                        },
+                        dataset: {
+                            name: "NYC Taxi Streaming Dataset",
+                            size: "1GB/hour",
+                            description: "Simulated real-time taxi ride data",
+                            link: "https://github.com/aws-samples/amazon-kinesis-replay",
+                            format: "JSON streaming data"
+                        },
+                        implementationAWS: [
+                            "Create Kinesis data streams",
+                            "Set up Kinesis Analytics app",
+                            "Configure Firehose delivery",
+                            "Create Lambda processors",
+                            "Set up Redshift cluster",
+                            "Build CloudWatch dashboard",
+                            "Implement auto-scaling",
+                            "Create cost alerts"
+                        ],
+                        implementationOSS: [
+                            "Deploy Kafka cluster (MSK or EC2)",
+                            "Configure Kafka Connect",
+                            "Set up Schema Registry",
+                            "Deploy Flink for processing",
+                            "Install Elasticsearch cluster",
+                            "Configure Kafka monitoring",
+                            "Set up Grafana dashboards",
+                            "Implement data retention"
+                        ],
+                        challenges: "Kafka requires more operational overhead. Cost comparison depends heavily on data volume.",
+                        deliverables: [
+                            "Working streaming pipelines",
+                            "Performance comparison report",
+                            "Cost analysis at different scales",
+                            "Operational runbook",
+                            "Monitoring dashboards",
+                            "Data quality metrics"
+                        ],
+                        timeEstimate: "4 hours"
+                    }
+                ],
+                advanced: [
+                    {
+                        title: "Hybrid Data Lakehouse with Delta Lake and AWS",
+                        description: "Build a modern data lakehouse architecture using Delta Lake (open source) on S3 with AWS analytics services for a best-of-both-worlds approach.",
+                        complexity: "advanced",
+                        architecture: `Data Sources
+    ├── Streaming (Kinesis/Kafka)
+    ├── Batch (S3/SFTP)
+    └── APIs (Lambda)
+         ↓
+    Delta Lake on S3
+    ├── Bronze Layer (Raw)
+    ├── Silver Layer (Cleaned)
+    └── Gold Layer (Aggregated)
+         ↓
+    Processing Engines
+    ├── EMR (Spark)
+    ├── Databricks
+    └── Presto/Athena
+         ↓
+    Analytics & ML
+    ├── Redshift Spectrum
+    ├── SageMaker
+    └── QuickSight`,
+                        awsTools: {
+                            "S3": "Storage layer",
+                            "EMR": "Spark processing",
+                            "Glue": "Data catalog",
+                            "Athena": "SQL queries",
+                            "SageMaker": "Machine learning"
+                        },
+                        ossTools: {
+                            "Delta Lake": "Storage format",
+                            "Apache Spark": "Processing",
+                            "MLflow": "ML lifecycle",
+                            "Presto": "Query engine",
+                            "Apache Airflow": "Orchestration"
+                        },
+                        dataset: {
+                            name: "E-commerce Data Bundle",
+                            size: "5GB",
+                            description: "Orders, customers, products, clickstream, reviews",
+                            link: "https://www.kaggle.com/olistbr/brazilian-ecommerce",
+                            format: "CSV, JSON, Parquet files"
+                        },
+                        implementationAWS: [
+                            "Set up S3 buckets with lifecycle",
+                            "Deploy EMR cluster with Delta",
+                            "Configure Glue crawlers",
+                            "Create Athena tables on Delta",
+                            "Set up Redshift Spectrum",
+                            "Build SageMaker pipelines",
+                            "Create QuickSight dashboards",
+                            "Implement Lake Formation security"
+                        ],
+                        implementationOSS: [
+                            "Install Delta Lake libraries",
+                            "Create medallion architecture",
+                            "Implement ACID transactions",
+                            "Set up time travel queries",
+                            "Deploy MLflow on EKS",
+                            "Configure Presto cluster",
+                            "Build Airflow DAGs",
+                            "Implement data quality checks"
+                        ],
+                        challenges: "Delta Lake requires careful version management. Integration with some AWS services needs custom configuration.",
+                        deliverables: [
+                            "Complete lakehouse architecture",
+                            "Data pipeline documentation",
+                            "Performance benchmarks",
+                            "Cost optimization report",
+                            "ML model deployment guide",
+                            "Data governance policies",
+                            "Query optimization strategies"
+                        ],
+                        timeEstimate: "8 hours"
+                    }
+                ]
+            },
+            monitoring: {
+                intermediate: [
+                    {
+                        title: "Observability Stack: Prometheus/Grafana vs CloudWatch",
+                        description: "Implement comprehensive monitoring using both open-source (Prometheus/Grafana) and AWS-native (CloudWatch) solutions for the same application.",
+                        complexity: "intermediate",
+                        architecture: `Application (EKS)
+    ├── Microservices
+    ├── Databases
+    └── Message Queues
+         ↓
+┌──────────┴──────────┐
+│                     │
+Prometheus Stack     CloudWatch Suite
+├── Prometheus       ├── Metrics
+├── AlertManager     ├── Logs Insights  
+├── Grafana          ├── X-Ray
+└── Loki             └── Dashboard
+     ↓                    ↓
+PagerDuty           SNS/EventBridge`,
+                        awsTools: {
+                            "CloudWatch": "Metrics and logs",
+                            "X-Ray": "Distributed tracing",
+                            "CloudWatch Logs": "Log aggregation",
+                            "SNS": "Alerting",
+                            "Systems Manager": "Operational data"
+                        },
+                        ossTools: {
+                            "Prometheus": "Metrics collection",
+                            "Grafana": "Visualization",
+                            "Loki": "Log aggregation",
+                            "Jaeger": "Distributed tracing",
+                            "AlertManager": "Alert routing"
+                        },
+                        dataset: {
+                            name: "Monitoring Test Suite",
+                            size: "100MB",
+                            description: "Load testing scripts and sample metrics data",
+                            link: "https://github.com/grafana/k6",
+                            format: "K6 scripts, sample dashboards"
+                        },
+                        implementationAWS: [
+                            "Configure CloudWatch agent",
+                            "Set up Container Insights",
+                            "Create custom metrics",
+                            "Build CloudWatch dashboards",
+                            "Configure X-Ray tracing",
+                            "Set up Log Insights queries",
+                            "Create CloudWatch alarms",
+                            "Implement automated responses"
+                        ],
+                        implementationOSS: [
+                            "Deploy Prometheus operator",
+                            "Configure service monitors",
+                            "Install Grafana with plugins",
+                            "Set up Loki for logs",
+                            "Configure AlertManager",
+                            "Create Grafana dashboards",
+                            "Implement recording rules",
+                            "Set up federation"
+                        ],
+                        challenges: "Prometheus requires storage planning. CloudWatch costs can escalate with custom metrics.",
+                        deliverables: [
+                            "Complete monitoring stacks",
+                            "Dashboard comparisons",
+                            "Alert rule library",
+                            "Cost analysis",
+                            "Performance impact study",
+                            "Operational procedures"
+                        ],
+                        timeEstimate: "4 hours"
+                    }
+                ],
+                advanced: [
+                    {
+                        title: "AIOps Platform with Open Source and AWS",
+                        description: "Build an AIOps platform combining open-source ML tools with AWS services for intelligent monitoring, anomaly detection, and automated remediation.",
+                        complexity: "advanced",
+                        architecture: `Data Collection Layer
+    ├── Prometheus (Metrics)
+    ├── Fluentd (Logs)
+    ├── Jaeger (Traces)
+    └── CloudWatch (AWS Metrics)
+         ↓
+    Stream Processing
+    ├── Kafka/Kinesis
+    └── Apache Flink
+         ↓
+    ML/Analytics Layer
+    ├── Prophet (Forecasting)
+    ├── Isolation Forest (Anomaly)
+    ├── SageMaker (Custom Models)
+    └── ElasticSearch (Analysis)
+         ↓
+    Decision Engine
+    ├── Rules Engine
+    ├── ML Predictions
+    └── Human Approval
+         ↓
+    Automation Layer
+    ├── Ansible (Remediation)
+    ├── Lambda (AWS Actions)
+    └── K8s Operators`,
+                        awsTools: {
+                            "SageMaker": "ML model training",
+                            "Lambda": "Automation",
+                            "EventBridge": "Event routing",
+                            "Systems Manager": "Remediation",
+                            "Forecast": "Time series prediction"
+                        },
+                        ossTools: {
+                            "Prophet": "Time series forecasting",
+                            "Seldon": "ML deployment",
+                            "Ansible": "Automation",
+                            "Apache Flink": "Stream processing",
+                            "Jupyter": "Analysis notebooks"
+                        },
+                        dataset: {
+                            name: "Historical Metrics Dataset",
+                            size: "2GB",
+                            description: "6 months of system metrics, logs, and incidents",
+                            link: "https://github.com/numenta/NAB",
+                            format: "Time series data, incident records"
+                        },
+                        implementationAWS: [
+                            "Set up data collection pipeline",
+                            "Create SageMaker notebooks",
+                            "Train anomaly detection models",
+                            "Deploy models to endpoints",
+                            "Configure EventBridge rules",
+                            "Create Lambda remediation functions",
+                            "Set up Systems Manager documents",
+                            "Build cost anomaly detection"
+                        ],
+                        implementationOSS: [
+                            "Deploy metrics collection stack",
+                            "Set up Kafka streaming",
+                            "Implement Prophet forecasting",
+                            "Deploy Seldon Core",
+                            "Create Ansible playbooks",
+                            "Build custom operators",
+                            "Implement feedback loop",
+                            "Create Jupyter dashboards"
+                        ],
+                        challenges: "ML model training requires significant compute. Balancing automation with safety requires careful design.",
+                        deliverables: [
+                            "Working AIOps platform",
+                            "ML model documentation",
+                            "Automation playbooks",
+                            "Incident reduction metrics",
+                            "Cost savings analysis",
+                            "Safety mechanisms guide",
+                            "Performance baselines"
+                        ],
+                        timeEstimate: "8 hours"
+                    }
+                ]
+            },
+            security: {
+                intermediate: [
+                    {
+                        title: "Zero Trust Security: Open Policy Agent vs AWS IAM",
+                        description: "Implement fine-grained access control using both OPA (Open Policy Agent) and AWS IAM/SCP, comparing policy models and enforcement mechanisms.",
+                        complexity: "intermediate",
+                        architecture: `Applications/Services
+         ↓
+┌──────────┴──────────┐
+│                     │
+OPA-Based           AWS-Based
+├── OPA Agents      ├── IAM Policies
+├── Rego Policies   ├── SCPs
+├── Decision Logs   ├── Permission Boundaries
+└── Bundle Server   └── CloudTrail
+     ↓                   ↓
+Enforcement         Enforcement
+├── Envoy Proxy     ├── Service Control
+├── K8s Admission   ├── Resource Tags
+└── App SDK         └── Session Policies`,
+                        awsTools: {
+                            "IAM": "Identity management",
+                            "Organizations": "Account structure",
+                            "CloudTrail": "Audit logging",
+                            "Config": "Compliance monitoring",
+                            "Access Analyzer": "Policy analysis"
+                        },
+                        ossTools: {
+                            "OPA": "Policy engine",
+                            "Rego": "Policy language",
+                            "OPAL": "Policy administration",
+                            "Envoy": "Policy enforcement",
+                            "Git": "Policy versioning"
+                        },
+                        dataset: {
+                            name: "Security Policy Templates",
+                            size: "10MB",
+                            description: "Sample policies, compliance rules, test scenarios",
+                            link: "https://github.com/open-policy-agent/library",
+                            format: "Rego policies, IAM policies"
+                        },
+                        implementationAWS: [
+                            "Design IAM role hierarchy",
+                            "Create permission boundaries",
+                            "Implement SCPs for guardrails",
+                            "Set up cross-account roles",
+                            "Configure CloudTrail logging",
+                            "Create Config rules",
+                            "Use Access Analyzer",
+                            "Build policy simulator tests"
+                        ],
+                        implementationOSS: [
+                            "Deploy OPA in Kubernetes",
+                            "Write Rego policies",
+                            "Set up policy bundles",
+                            "Configure decision logging",
+                            "Integrate with Envoy",
+                            "Create admission webhooks",
+                            "Build policy testing suite",
+                            "Implement OPAL for updates"
+                        ],
+                        challenges: "OPA requires learning Rego language. IAM policy limits can be restrictive for complex scenarios.",
+                        deliverables: [
+                            "Policy comparison matrix",
+                            "Implementation guides",
+                            "Policy test suites",
+                            "Performance benchmarks",
+                            "Compliance reports",
+                            "Migration strategies"
+                        ],
+                        timeEstimate: "4 hours"
+                    }
+                ],
+                advanced: [
+                    {
+                        title: "Cloud-Native SIEM with Elastic Stack and AWS",
+                        description: "Build a hybrid SIEM solution using Elastic Stack for analysis and AWS services for data collection, comparing with AWS-native security services.",
+                        complexity: "advanced",
+                        architecture: `Data Sources
+    ├── VPC Flow Logs
+    ├── CloudTrail
+    ├── GuardDuty
+    ├── WAF Logs
+    └── Application Logs
+         ↓
+    Collection Pipeline
+    ├── Kinesis Firehose
+    └── Logstash/Beats
+         ↓
+    Elastic Stack (EC2/EKS)
+    ├── Elasticsearch
+    ├── Logstash
+    ├── Kibana
+    └── Elastic SIEM
+         ↓
+    Analysis & Response
+    ├── ML Jobs
+    ├── Watcher Alerts
+    ├── Lambda Functions
+    └── Security Orchestration`,
+                        awsTools: {
+                            "GuardDuty": "Threat detection",
+                            "Security Hub": "Compliance",
+                            "Detective": "Investigation",
+                            "Macie": "Data classification",
+                            "WAF": "Web protection"
+                        },
+                        ossTools: {
+                            "Elasticsearch": "Data store",
+                            "Logstash": "Processing",
+                            "Kibana": "Visualization",
+                            "Beats": "Data shippers",
+                            "ElastAlert": "Alerting"
+                        },
+                        dataset: {
+                            name: "Security Event Dataset",
+                            size: "5GB",
+                            description: "CloudTrail logs, VPC flows, simulated attacks",
+                            link: "https://github.com/splunk/attack_data",
+                            format: "JSON logs, PCAP files"
+                        },
+                        implementationAWS: [
+                            "Enable all AWS security services",
+                            "Configure log aggregation",
+                            "Set up Kinesis Firehose",
+                            "Create Security Hub custom insights",
+                            "Configure GuardDuty detectors",
+                            "Implement automated responses",
+                            "Build Detective investigation graphs",
+                            "Create compliance dashboards"
+                        ],
+                        implementationOSS: [
+                            "Deploy Elasticsearch cluster",
+                            "Configure index lifecycle",
+                            "Set up Logstash pipelines",
+                            "Install Elastic SIEM",
+                            "Create detection rules",
+                            "Build Kibana dashboards",
+                            "Configure ML anomaly jobs",
+                            "Implement case management"
+                        ],
+                        challenges: "Elasticsearch requires significant resources. Data retention costs need careful planning.",
+                        deliverables: [
+                            "Complete SIEM platform",
+                            "Detection rule library",
+                            "Incident response playbooks",
+                            "Threat hunting guides",
+                            "Compliance mappings",
+                            "Performance tuning guide",
+                            "Cost optimization report"
+                        ],
+                        timeEstimate: "8 hours"
+                    }
+                ]
+            },
+            ml: {
+                intermediate: [
+                    {
+                        title: "MLOps Pipeline: Kubeflow vs SageMaker",
+                        description: "Build parallel ML pipelines using Kubeflow (open source) and SageMaker, comparing development experience, costs, and capabilities.",
+                        complexity: "intermediate",
+                        architecture: `Data Sources
+    └── S3 Data Lake
+         ↓
+┌──────────┴──────────┐
+│                     │
+Kubeflow Pipeline   SageMaker Pipeline
+├── Notebook        ├── Studio Notebooks
+├── Katib (HPO)     ├── Hyperparameter Tuning
+├── Training        ├── Training Jobs
+├── KFServing       ├── Model Endpoints
+└── Metadata        └── Model Registry
+     ↓                   ↓
+Model Monitoring    Model Monitor
+A/B Testing         A/B Testing`,
+                        awsTools: {
+                            "SageMaker": "ML platform",
+                            "ECR": "Container registry",
+                            "S3": "Data storage",
+                            "CloudWatch": "Monitoring",
+                            "Lambda": "Inference"
+                        },
+                        ossTools: {
+                            "Kubeflow": "ML platform",
+                            "Jupyter": "Notebooks",
+                            "MLflow": "Experiment tracking",
+                            "Seldon": "Model serving",
+                            "Prometheus": "Monitoring"
+                        },
+                        dataset: {
+                            name: "Credit Card Fraud Dataset",
+                            size: "150MB",
+                            description: "Anonymized credit card transactions with fraud labels",
+                            link: "https://www.kaggle.com/mlg-ulb/creditcardfraud",
+                            format: "CSV with 284k transactions"
+                        },
+                        implementationAWS: [
+                            "Set up SageMaker Studio",
+                            "Create processing jobs",
+                            "Implement training pipeline",
+                            "Configure hyperparameter tuning",
+                            "Deploy model endpoints",
+                            "Set up Model Monitor",
+                            "Implement A/B testing",
+                            "Create cost tracking"
+                        ],
+                        implementationOSS: [
+                            "Deploy Kubeflow on EKS",
+                            "Create pipeline components",
+                            "Set up Katib experiments",
+                            "Configure distributed training",
+                            "Deploy with KFServing",
+                            "Integrate MLflow tracking",
+                            "Set up Prometheus monitoring",
+                            "Implement model versioning"
+                        ],
+                        challenges: "Kubeflow requires Kubernetes expertise. SageMaker costs can be significant for large experiments.",
+                        deliverables: [
+                            "Working ML pipelines",
+                            "Model performance comparison",
+                            "Cost analysis report",
+                            "Pipeline templates",
+                            "Monitoring dashboards",
+                            "Best practices guide"
+                        ],
+                        timeEstimate: "4 hours"
+                    }
+                ],
+                advanced: [
+                    {
+                        title: "Federated Learning Platform with AWS and Open Source",
+                        description: "Build a federated learning system that trains models across distributed data sources while preserving privacy, using both AWS services and open-source tools.",
+                        complexity: "advanced",
+                        architecture: `Edge Devices/Clients
+    ├── IoT Devices (Greengrass)
+    ├── Mobile Apps
+    └── Branch Servers
+         ↓
+    Local Training
+    ├── TensorFlow Federated
+    ├── PySyft
+    └── Edge ML Runtime
+         ↓
+    Aggregation Server (EKS)
+    ├── Flower Framework
+    ├── Model Aggregation
+    ├── Differential Privacy
+    └── Secure Aggregation
+         ↓
+    Central Services
+    ├── S3 (Model Storage)
+    ├── DynamoDB (Metadata)
+    ├── SageMaker (Evaluation)
+    └── CloudWatch (Monitoring)`,
+                        awsTools: {
+                            "IoT Greengrass": "Edge computing",
+                            "EKS": "Aggregation cluster",
+                            "S3": "Model storage",
+                            "DynamoDB": "Coordination",
+                            "KMS": "Encryption"
+                        },
+                        ossTools: {
+                            "Flower": "Federated learning",
+                            "PySyft": "Privacy preservation",
+                            "TensorFlow Federated": "FL framework",
+                            "Prometheus": "Monitoring",
+                            "Vault": "Secret management"
+                        },
+                        dataset: {
+                            name: "LEAF Federated Dataset",
+                            size: "500MB",
+                            description: "Federated learning benchmark datasets",
+                            link: "https://leaf.cmu.edu/",
+                            format: "Partitioned data for FL simulation"
+                        },
+                        implementationAWS: [
+                            "Set up IoT Greengrass core",
+                            "Deploy edge ML components",
+                            "Create EKS aggregation cluster",
+                            "Configure S3 model repository",
+                            "Set up DynamoDB for coordination",
+                            "Implement KMS encryption",
+                            "Create monitoring dashboard",
+                            "Build cost allocation model"
+                        ],
+                        implementationOSS: [
+                            "Deploy Flower server",
+                            "Implement FL strategies",
+                            "Configure differential privacy",
+                            "Set up secure aggregation",
+                            "Create client libraries",
+                            "Implement model compression",
+                            "Build simulation environment",
+                            "Create privacy metrics"
+                        ],
+                        challenges: "Federated learning requires careful privacy design. Network costs for edge communication need consideration.",
+                        deliverables: [
+                            "Complete FL platform",
+                            "Privacy analysis report",
+                            "Client integration guides",
+                            "Performance benchmarks",
+                            "Communication cost analysis",
+                            "Security audit report",
+                            "Scalability testing results"
+                        ],
+                        timeEstimate: "8 hours"
+                    }
+                ]
+            },
+            serverless: {
+                intermediate: [
+                    {
+                        title: "Serverless APIs: OpenFaaS vs Lambda",
+                        description: "Build the same API using OpenFaaS (Kubernetes-based) and AWS Lambda, comparing developer experience, performance, and costs.",
+                        complexity: "intermediate",
+                        architecture: `API Gateway Layer
+         ↓
+┌──────────┴──────────┐
+│                     │
+OpenFaaS           AWS Lambda
+├── Gateway        ├── API Gateway
+├── Functions      ├── Functions  
+├── Prometheus     ├── X-Ray
+└── NATS           └── SQS
+     ↓                  ↓
+Data Layer         Data Layer
+├── PostgreSQL     ├── DynamoDB
+└── Redis          └── ElastiCache`,
+                        awsTools: {
+                            "Lambda": "Functions",
+                            "API Gateway": "HTTP endpoints",
+                            "DynamoDB": "NoSQL database",
+                            "X-Ray": "Tracing",
+                            "EventBridge": "Events"
+                        },
+                        ossTools: {
+                            "OpenFaaS": "FaaS platform",
+                            "NATS": "Messaging",
+                            "Prometheus": "Monitoring",
+                            "PostgreSQL": "Database",
+                            "Redis": "Caching"
+                        },
+                        dataset: {
+                            name: "E-commerce API Test Data",
+                            size: "50MB",
+                            description: "Products, orders, and user data for API testing",
+                            link: "https://github.com/betterjavacode/rest-api-data",
+                            format: "JSON test data, Postman collections"
+                        },
+                        implementationAWS: [
+                            "Create Lambda functions",
+                            "Set up API Gateway routes",
+                            "Configure DynamoDB tables",
+                            "Implement X-Ray tracing",
+                            "Set up EventBridge rules",
+                            "Create deployment pipeline",
+                            "Implement caching strategy",
+                            "Configure auto-scaling"
+                        ],
+                        implementationOSS: [
+                            "Deploy OpenFaaS on Kubernetes",
+                            "Create function templates",
+                            "Set up auto-scaling",
+                            "Configure Prometheus monitoring",
+                            "Implement async with NATS",
+                            "Set up PostgreSQL backend",
+                            "Configure Redis caching",
+                            "Build CI/CD with faas-cli"
+                        ],
+                        challenges: "OpenFaaS requires Kubernetes cluster. Lambda cold starts affect performance.",
+                        deliverables: [
+                            "API documentation",
+                            "Performance benchmarks",
+                            "Cost comparison at scale",
+                            "Function templates",
+                            "Monitoring dashboards",
+                            "Migration guide"
+                        ],
+                        timeEstimate: "4 hours"
+                    }
+                ],
+                advanced: [
+                    {
+                        title: "Event-Driven Microservices with Knative and EventBridge",
+                        description: "Build a complex event-driven architecture using Knative (Kubernetes serverless) integrated with AWS EventBridge for hybrid cloud events.",
+                        complexity: "advanced",
+                        architecture: `Event Sources
+    ├── S3 Events
+    ├── DynamoDB Streams  
+    ├── Custom Apps
+    └── SaaS Webhooks
+         ↓
+    Event Router
+    ├── EventBridge Rules
+    └── Knative Eventing
+         ↓
+    Processing Layer
+    ├── Knative Services
+    ├── Lambda Functions
+    ├── Step Functions
+    └── Batch Jobs
+         ↓
+    Event Sinks
+    ├── Data Lake (S3)
+    ├── Analytics (Kinesis)
+    ├── Notifications (SNS)
+    └── External APIs`,
+                        awsTools: {
+                            "EventBridge": "Event routing",
+                            "Step Functions": "Orchestration",
+                            "Lambda": "Event processing",
+                            "Kinesis": "Stream processing",
+                            "Batch": "Batch processing"
+                        },
+                        ossTools: {
+                            "Knative": "Serverless platform",
+                            "CloudEvents": "Event standard",
+                            "KEDA": "Auto-scaling",
+                            "Argo Events": "Event framework",
+                            "Tekton": "CI/CD"
+                        },
+                        dataset: {
+                            name: "Event Stream Simulator",
+                            size: "Streaming",
+                            description: "Multi-source event generator with various patterns",
+                            link: "Custom generator included",
+                            format: "CloudEvents JSON"
+                        },
+                        implementationAWS: [
+                            "Configure EventBridge bus",
+                            "Create routing rules",
+                            "Deploy Lambda processors",
+                            "Build Step Functions workflows",
+                            "Set up DLQ handling",
+                            "Implement event replay",
+                            "Create EventBridge archive",
+                            "Monitor with X-Ray"
+                        ],
+                        implementationOSS: [
+                            "Deploy Knative Serving/Eventing",
+                            "Configure event sources",
+                            "Create Knative services",
+                            "Set up CloudEvents gateway",
+                            "Implement KEDA scaling",
+                            "Build Argo Events sensors",
+                            "Create Tekton triggers",
+                            "Set up distributed tracing"
+                        ],
+                        challenges: "Event ordering and exactly-once processing require careful design. Cost management with high event volumes.",
+                        deliverables: [
+                            "Event-driven architecture",
+                            "Event catalog documentation",
+                            "Performance test results",
+                            "Cost model at scale",
+                            "Error handling patterns",
+                            "Event replay procedures",
+                            "Monitoring strategy"
+                        ],
+                        timeEstimate: "6-8 hours"
+                    }
+                ]
+            },
+            iac: {
+                intermediate: [
+                    {
+                        title: "Multi-Cloud IaC: Terraform vs Pulumi vs CDK",
+                        description: "Implement the same infrastructure using Terraform, Pulumi, and AWS CDK, comparing languages, workflows, and maintainability.",
+                        complexity: "intermediate",
+                        architecture: `Infrastructure Definition
+         ↓
+┌────────┼────────┐
+│        │        │
+Terraform  Pulumi   CDK
+(HCL)     (TS/Py)  (TS/Py)
+    ↓        ↓        ↓
+State Management
+├── S3 Backend
+├── Locking (DynamoDB)
+└── Version Control
+         ↓
+Target Infrastructure
+├── VPC with Subnets
+├── EKS Cluster
+├── RDS Multi-AZ
+├── ALB + Auto-scaling
+└── Monitoring Stack`,
+                        awsTools: {
+                            "CloudFormation": "CDK target",
+                            "S3": "State storage",
+                            "DynamoDB": "State locking",
+                            "CodeBuild": "CI/CD",
+                            "Systems Manager": "Parameters"
+                        },
+                        ossTools: {
+                            "Terraform": "IaC tool",
+                            "Pulumi": "IaC platform",
+                            "Atlantis": "Terraform automation",
+                            "Terragrunt": "Terraform wrapper",
+                            "tfsec": "Security scanning"
+                        },
+                        dataset: {
+                            name: "IaC Templates Library",
+                            size: "20MB",
+                            description: "Reusable modules and components for all three tools",
+                            link: "https://github.com/aws-samples/aws-cdk-examples",
+                            format: "HCL, TypeScript, Python"
+                        },
+                        implementationAWS: [
+                            "Set up state backends",
+                            "Create parameter store entries",
+                            "Configure IAM roles for IaC",
+                            "Deploy with CloudFormation",
+                            "Set up drift detection",
+                            "Create CodeBuild projects",
+                            "Implement cost tagging",
+                            "Configure deletion protection"
+                        ],
+                        implementationOSS: [
+                            "Write Terraform modules",
+                            "Create Pulumi components",
+                            "Implement CDK constructs",
+                            "Set up Atlantis for PRs",
+                            "Configure security scanning",
+                            "Create reusable libraries",
+                            "Implement testing suites",
+                            "Build documentation"
+                        ],
+                        challenges: "Each tool has different state management approaches. Testing strategies vary significantly.",
+                        deliverables: [
+                            "Infrastructure implementations",
+                            "Comparison matrix",
+                            "Module libraries",
+                            "CI/CD pipelines",
+                            "Testing strategies",
+                            "Migration guides"
+                        ],
+                        timeEstimate: "4 hours"
+                    }
+                ],
+                advanced: [
+                    {
+                        title: "GitOps Infrastructure Platform with Crossplane",
+                        description: "Build a Kubernetes-native infrastructure platform using Crossplane to provision both AWS resources and external services through GitOps.",
+                        complexity: "advanced",
+                        architecture: `Git Repository
+    ├── Application Manifests
+    ├── Crossplane Claims
+    └── Compositions
+         ↓
+    ArgoCD (GitOps)
+         ↓
+    Crossplane Control Plane
+    ├── AWS Provider
+    ├── GCP Provider
+    ├── Helm Provider
+    └── Terraform Provider
+         ↓
+    Resource Provisioning
+    ├── AWS Resources
+    │   ├── RDS Instances
+    │   ├── S3 Buckets
+    │   └── EKS Clusters
+    └── External Services
+        ├── DataDog
+        ├── PagerDuty
+        └── Vault`,
+                        awsTools: {
+                            "EKS": "Control plane cluster",
+                            "IAM": "IRSA for providers",
+                            "RDS": "Managed databases",
+                            "S3": "Object storage",
+                            "CloudWatch": "Monitoring"
+                        },
+                        ossTools: {
+                            "Crossplane": "Infrastructure platform",
+                            "ArgoCD": "GitOps deployment",
+                            "OPA": "Policy enforcement",
+                            "Prometheus": "Monitoring",
+                            "Velero": "Backup"
+                        },
+                        dataset: {
+                            name: "Platform Templates",
+                            size: "15MB",
+                            description: "Crossplane compositions, XRDs, and claim templates",
+                            link: "https://github.com/crossplane/crossplane",
+                            format: "YAML manifests"
+                        },
+                        implementationAWS: [
+                            "Create EKS control cluster",
+                            "Configure IRSA for providers",
+                            "Set up AWS provider config",
+                            "Create RDS compositions",
+                            "Build S3 claim templates",
+                            "Configure network peering",
+                            "Implement backup policies",
+                            "Set up cost allocation"
+                        ],
+                        implementationOSS: [
+                            "Install Crossplane core",
+                            "Configure providers",
+                            "Create XRDs and compositions",
+                            "Set up ArgoCD applications",
+                            "Implement OPA policies",
+                            "Configure Prometheus monitoring",
+                            "Create platform APIs",
+                            "Build self-service portal"
+                        ],
+                        challenges: "Crossplane learning curve is steep. Debugging composition issues can be complex.",
+                        deliverables: [
+                            "Complete platform implementation",
+                            "Composition library",
+                            "Self-service documentation",
+                            "Policy library",
+                            "Platform metrics",
+                            "Disaster recovery plan",
+                            "Cost tracking dashboard"
+                        ],
+                        timeEstimate: "8 hours"
+                    }
+                ]
+            }
+        };
+
+        let activeTab = 'aws';
+
+        function setActiveTab(tab) {
+            activeTab = tab;
+            document.querySelectorAll('.tab').forEach(t => {
+                t.classList.remove('active');
+            });
+            document.querySelector(`.tab[onclick="setActiveTab('${tab}')"]`).classList.add('active');
+            
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${tab}-steps`).classList.add('active');
+        }
+
+        function generateProject() {
+            const focus = document.getElementById('projectFocus').value;
+            const complexity = document.getElementById('complexity').value;
+            const platform = document.getElementById('platform').value;
+            
+            // Get projects for selected focus and complexity
+            let availableProjects = [];
+            
+            if (projects[focus] && projects[focus][complexity]) {
+                availableProjects = projects[focus][complexity];
+            }
+            
+            if (availableProjects.length === 0) {
+                alert('No projects found matching your criteria. Try different filters.');
+                return;
+            }
+            
+            // For now, select random project (could filter by platform preference)
+            const project = availableProjects[Math.floor(Math.random() * availableProjects.length)];
+            displayProject(project);
+        }
+
+        function displayProject(project) {
+            const output = document.getElementById('projectOutput');
+            
+            // Generate implementation tabs
+            const implementationTabs = `
+                <div class="implementation-tabs">
+                    <div class="tab active" onclick="setActiveTab('aws')">AWS Implementation</div>
+                    <div class="tab" onclick="setActiveTab('oss')">Open Source Implementation</div>
+                </div>
+                <div class="tab-content active" id="aws-steps">
+                    <ul class="implementation-list">
+                        ${project.implementationAWS.map(step => `<li>${step}</li>`).join('')}
+                    </ul>
+                </div>
+                <div class="tab-content" id="oss-steps">
+                    <ul class="implementation-list">
+                        ${project.implementationOSS.map(step => `<li>${step}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+            
+            // Generate tech comparison
+            const techComparison = `
+                <div class="tech-comparison">
+                    <div class="tech-column aws-column">
+                        <h4>🔸 AWS Services</h4>
+                        <ul class="tech-list">
+                            ${Object.entries(project.awsTools).map(([tool, use]) => 
+                                `<li><strong>${tool}</strong><span class="cost-indicator">${use}</span></li>`
+                            ).join('')}
+                        </ul>
+                    </div>
+                    <div class="tech-column oss-column">
+                        <h4>🔹 Open Source Tools</h4>
+                        <ul class="tech-list">
+                            ${Object.entries(project.ossTools).map(([tool, use]) => 
+                                `<li><strong>${tool}</strong><span class="cost-indicator">${use}</span></li>`
+                            ).join('')}
+                        </ul>
+                    </div>
+                </div>
+            `;
+            
+            let sampleCodeSection = '';
+            if (project.sampleCode) {
+                sampleCodeSection = `
+                    <div class="section">
+                        <h3 class="section-title">Sample Code</h3>
+                        <div class="code-snippet">${project.sampleCode}</div>
+                    </div>
+                `;
+            }
+            
+            output.innerHTML = `
+                <div class="project-card">
+                    <div class="project-header">
+                        <h2 class="project-title">${project.title}</h2>
+                        <p class="project-description">${project.description}</p>
+                        <span class="complexity-badge ${project.complexity}">${project.complexity.toUpperCase()}</span>
+                        <div class="time-estimate">
+                            ⏱️ Estimated Time: ${project.timeEstimate}
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <h3 class="section-title">Architecture Overview</h3>
+                        <div class="architecture-box">${project.architecture}</div>
+                    </div>
+                    
+                    <div class="section">
+                        <h3 class="section-title">Technology Stack</h3>
+                        ${techComparison}
+                    </div>
+                    
+                    <div class="section">
+                        <h3 class="section-title">Dataset Requirements</h3>
+                        <div class="dataset-info">
+                            <strong>${project.dataset.name}</strong> (${project.dataset.size})<br>
+                            <p style="margin: 10px 0;">${project.dataset.description}</p>
+                            <strong>Format:</strong> ${project.dataset.format}<br>
+                            <strong>Source:</strong> <a href="${project.dataset.link}" class="dataset-link" target="_blank">${project.dataset.link}</a>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <h3 class="section-title">Implementation Steps</h3>
+                        ${implementationTabs}
+                    </div>
+                    
+                    ${sampleCodeSection}
+                    
+                    <div class="section">
+                        <h3 class="section-title">Key Challenges</h3>
+                        <div class="challenges">
+                            <div class="challenges-title">⚠️ Important Considerations</div>
+                            ${project.challenges}
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <h3 class="section-title">Project Deliverables</h3>
+                        <div class="deliverables-grid">
+                            ${project.deliverables.map(item => `<div class="deliverable-item">✅ ${item}</div>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Generate initial project on page load
+        window.onload = function() {
+            generateProject();
+        };
+    </script>
